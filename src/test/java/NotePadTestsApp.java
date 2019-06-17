@@ -1,53 +1,113 @@
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.qameta.allure.junit4.DisplayName;
+import objects.Folders;
+import objects.LoginPage;
+import objects.NavBar;
+import objects.NotePad;
 import org.junit.*;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class NotePadTestsApp {
     WebDriver driver;
-    WebDriverWait wait;
+    NotePad notePad;
+    LoginPage loginPage;
+    Folders folders;
 
-    @BeforeClass
-    public static void init() {
-        System.setProperty("webdriver.chrome.driver", "/Users/nastia/Documents/chromedriver");
-    }
+    String title = "My New Super Title";
+    String note = "Note content\nLine2\nLine3";
+
+    String registerEmail = "test1@gmail.com";
+    String registerPwd = "123456";
+
+    String loginEmail = "test1@gmail.com";
+    String loginPwd = "123456";
+
+    String folderName = "My Folder";
 
     @Before
     public void openBrowser() {
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
-        Dimension size = new Dimension(1600, 900);
-        driver.manage().window().setSize(size);
-        wait = new WebDriverWait(driver, 5);
+        notePad = new NotePad(driver);
+        loginPage = new LoginPage(driver);
+        folders = new Folders(driver);
     }
 
     @Test
-    public void NoteTest()  {
-        driver.get("https://anotepad.com/");
-        driver.findElement(By.id("edit_title")).sendKeys("My New Note");
-        driver.findElement(By.id("edit_textarea")).sendKeys("My First text");
-        driver.findElement(By.id("btnSaveNote")).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                By.cssSelector("body > div.containerMain > div > p:nth-child(1)"), "You have saved your note as a Guest User.")
-        );
-        driver.findElement(By.cssSelector("#note_form > div:nth-child(4) > div > span:nth-child(4) > strong > a")).click();
+    @DisplayName("Test notepad content is correct")
+    public void notepadTest() {
+        notePad
+                .open()
+                .setTitle(title)
+                .setContent(note)
+                .save();
+        Assert.assertEquals(note, notePad.getNoteContent());
+    }
 
-        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        driver.switchTo().alert();
-        alert.accept();
+    @Test
+    @DisplayName("Test title content is okay")
+    public void notepadTest2() {
+        notePad
+                .open()
+                .setTitle(title)
+                .setContent(note)
+                .save();
+        Assert.assertEquals(title, notePad.getTitleContent());
+    }
 
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("#savedNotes > div"), "No note here."));
-        Assert.assertEquals("No note here.", driver.findElement(By.cssSelector("#savedNotes > div")).getText());
+    @Test
+    @DisplayName("GL-502: F-40 Sign Up for free account, F-170 Creating an account")
+    public void createAccountTest() {
+
+        loginPage
+                .open()
+                .enterCreateEmail(registerEmail)
+                .enterCreatePassword(registerPwd)
+                .createAccount();
+
+        Assert.assertEquals(driver.findElement(NavBar.settingsBtn).isDisplayed(), true);
+
+    }
+
+    @Test
+    @DisplayName("GL-568: F-180 Logging with correct Email and Password")
+    public void loginTest() {
+
+        loginPage
+                .open()
+                .enterLoginEmail(loginEmail)
+                .enterLoginPassword(loginPwd)
+                .login();
+
+        Assert.assertEquals(driver.findElement(NavBar.settingsBtn).isDisplayed(), true);
+
     }
 
 
+    @Test
+    @DisplayName("Create folder")
+    public void createFolder() {
+
+        loginPage
+                .open()
+                .enterLoginEmail(loginEmail)
+                .enterLoginPassword(loginPwd)
+                .login();
+
+
+        folders
+                .manageFolders()
+                .enterFolderName(folderName)
+                .save()
+                .close();
+
+        Assert.assertEquals(folders.getCreatedFolderName(), folderName);
+
+    }
 
     @After
     public void closeBrowser() {
         driver.quit();
     }
-
 }
