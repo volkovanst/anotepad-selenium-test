@@ -9,10 +9,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class LoginPage {
 
     private static final String url = "https://anotepad.com/create_account";
+
     private static final By registerEmail = By.id("registerEmail");
     private static final By loginEmail = By.id("loginEmail");
     private static final By password = By.id("password");
     private static final By submitBtn = By.id("submit");
+    private static final By settingsBtn = By.cssSelector("a[href=\"/settings\"]");
+    private static final By logoutBtn = By.cssSelector("a[href=\"/logout\"]");
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -43,7 +46,7 @@ public class LoginPage {
     @Step
     public LoginPage createAccount() {
         driver.findElements(submitBtn).get(0).click();
-        wait.until(ExpectedConditions.elementToBeClickable(NavBar.logoutBtn));
+        wait.until(ExpectedConditions.presenceOfElementLocated(logoutBtn));
         return this;
     }
 
@@ -62,8 +65,12 @@ public class LoginPage {
     @Step
     public LoginPage login() {
         driver.findElements(submitBtn).get(1).click();
-        wait.until(ExpectedConditions.elementToBeClickable(NavBar.logoutBtn));
+        wait.until(ExpectedConditions.elementToBeClickable(logoutBtn));
         return this;
+    }
+
+    public boolean isSettingsButtonDisplayed() {
+        return driver.findElement(settingsBtn).isDisplayed();
     }
 
 }

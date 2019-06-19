@@ -11,7 +11,9 @@ public class NotePad {
     private static final By noteTitle = By.id("edit_title");
     private static final By noteContent = By.id("edit_textarea");
     private static final By saveTitleButton = By.xpath("//*[@id='btnSaveNote']");
-    private static final By deleteNote = By.cssSelector(".delete");
+    private static final By alertWarning = By.cssSelector(".alert.alert-warning");
+
+    private static final String alertWarningText = "You have saved your note as a";
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -34,11 +36,6 @@ public class NotePad {
         return this;
     }
 
-    @Step
-    public NotePad addContent(String content) {
-        driver.findElement(noteContent).sendKeys(content);
-        return this;
-    }
 
     @Step
     public NotePad setContent(String content) {
@@ -50,7 +47,7 @@ public class NotePad {
     @Step
     public NotePad save() {
         driver.findElement(saveTitleButton).click();
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".alert.alert-warning"), "You have saved your note as a"));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(alertWarning, alertWarningText));
         return this;
     }
 

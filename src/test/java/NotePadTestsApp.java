@@ -2,7 +2,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.junit4.DisplayName;
 import objects.Folders;
 import objects.LoginPage;
-import objects.NavBar;
 import objects.NotePad;
 import org.junit.*;
 import org.openqa.selenium.WebDriver;
@@ -66,7 +65,7 @@ public class NotePadTestsApp {
                 .enterCreatePassword(registerPwd)
                 .createAccount();
 
-        Assert.assertEquals(driver.findElement(NavBar.settingsBtn).isDisplayed(), true);
+        Assert.assertEquals(loginPage.isSettingsButtonDisplayed(), true);
 
     }
 
@@ -80,7 +79,7 @@ public class NotePadTestsApp {
                 .enterLoginPassword(loginPwd)
                 .login();
 
-        Assert.assertEquals(driver.findElement(NavBar.settingsBtn).isDisplayed(), true);
+        Assert.assertEquals(loginPage.isSettingsButtonDisplayed(), true);
 
     }
 
@@ -94,7 +93,6 @@ public class NotePadTestsApp {
                 .enterLoginEmail(loginEmail)
                 .enterLoginPassword(loginPwd)
                 .login();
-
 
         folders
                 .manageFolders()
