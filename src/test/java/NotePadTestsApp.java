@@ -58,29 +58,15 @@ public class NotePadTestsApp {
     @Test
     @DisplayName("GL-502: F-40 Sign Up for free account, F-170 Creating an account")
     public void createAccountTest() {
-
-        loginPage
-                .open()
-                .enterCreateEmail(registerEmail)
-                .enterCreatePassword(registerPwd)
-                .createAccount();
-
+        loginPage.registerAccount(registerEmail, registerPwd);
         Assert.assertEquals(loginPage.isSettingsButtonDisplayed(), true);
-
     }
 
     @Test
     @DisplayName("GL-568: F-180 Logging with correct Email and Password")
     public void loginTest() {
-
-        loginPage
-                .open()
-                .enterLoginEmail(loginEmail)
-                .enterLoginPassword(loginPwd)
-                .login();
-
+        loginPage.performLogin(loginEmail, loginPwd);
         Assert.assertEquals(loginPage.isSettingsButtonDisplayed(), true);
-
     }
 
 
@@ -88,11 +74,7 @@ public class NotePadTestsApp {
     @DisplayName("Create folder")
     public void createFolder() {
 
-        loginPage
-                .open()
-                .enterLoginEmail(loginEmail)
-                .enterLoginPassword(loginPwd)
-                .login();
+        loginPage.performLogin(loginEmail, loginPwd);
 
         folders
                 .manageFolders()

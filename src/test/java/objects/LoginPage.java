@@ -14,8 +14,8 @@ public class LoginPage {
     private static final By loginEmail = By.id("loginEmail");
     private static final By password = By.id("password");
     private static final By submitBtn = By.id("submit");
-    private static final By settingsBtn = By.cssSelector("a[href=\"/settings\"]");
-    private static final By logoutBtn = By.cssSelector("a[href=\"/logout\"]");
+    private static final By settingsBtn = By.cssSelector("a[href='/settings']");
+    private static final By logoutBtn = By.cssSelector("a[href='/logout']");
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -73,4 +73,17 @@ public class LoginPage {
         return driver.findElement(settingsBtn).isDisplayed();
     }
 
+    public void performLogin (String email, String pwd) {
+             open()
+              .enterLoginEmail(email)
+              .enterLoginPassword(pwd)
+              .login();
+    }
+
+    public void registerAccount (String email, String pwd) {
+             open()
+              .enterCreateEmail(email)
+              .enterCreatePassword(pwd)
+              .createAccount();
+    }
 }
